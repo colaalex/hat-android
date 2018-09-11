@@ -1,12 +1,15 @@
 package com.github.colaalex.hat;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class ResultActivity extends AppCompatActivity {
@@ -15,10 +18,14 @@ public class ResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
-        Resources res = getResources();
 
         Intent intent = getIntent();
-        String result = intent.getStringExtra("result");
+        ArrayList<Team> teams = (ArrayList<Team>) intent.getSerializableExtra("teams");
+        Collections.sort(teams);
+
+        RecyclerView recyclerView = findViewById(R.id.rv_result);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new ResultAdapter(teams));
 
         Button newGameButton = findViewById(R.id.btn_new);
         newGameButton.setOnClickListener(new View.OnClickListener() {
@@ -27,9 +34,6 @@ public class ResultActivity extends AppCompatActivity {
                 restartGame();
             }
         });
-
-        TextView textResult = findViewById(R.id.txt_result);
-        textResult.setText(String.format(res.getString(R.string.result), result));
     }
 
     void restartGame() {

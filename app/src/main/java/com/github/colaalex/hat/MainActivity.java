@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -21,7 +20,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private int turn;
-    private Team[] teams = new Team[4];
+    private ArrayList<Team> teams = new ArrayList<>();
     private List<String> words = new ArrayList<>(); //пока что захардкодил
     private int currentScore;
     private Resources res;
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         turn = 0;
 
-        textTurn.setText(String.format(res.getString(R.string.team_turn), teams[0].getName()));
+        textTurn.setText(String.format(res.getString(R.string.team_turn), teams.get(0).getName()));
 
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,31 +126,21 @@ public class MainActivity extends AppCompatActivity {
 
     void endTurn() {
         chronometer.stop();
-        teams[turn].setScore(currentScore);
+        teams.get(turn).setScore(currentScore);
         currentScore = 0;
         layoutQuiz.setVisibility(View.INVISIBLE);
         turn++;
-        textTurn.setText(String.format(res.getString(R.string.team_turn), teams[turn].getName()));
+        textTurn.setText(String.format(res.getString(R.string.team_turn), teams.get(turn).getName()));
         layoutSplash.setVisibility(View.VISIBLE);
     }
 
     void endGame() {
         chronometer.stop();
-        teams[turn].setScore(currentScore);
-        String resultText = setResultText();
+        teams.get(turn).setScore(currentScore);
         Intent intent = new Intent(this, ResultActivity.class);
-        intent.putExtra("result", resultText);
+        intent.putExtra("teams", teams);
         startActivity(intent);
         finish();
-    }
-
-    String setResultText() {
-        Arrays.sort(teams);
-        StringBuilder builder = new StringBuilder();
-        for (Team team : teams) {
-            builder.append(String.format("%s %d\n", team.getName(), team.getScore()));
-        }
-        return builder.toString();
     }
 
     void fillList() {
@@ -161,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
         words.add("w4");
 
         String[] teamStrings = res.getStringArray(R.array.teams);
-        for (int i = 0; i < teamStrings.length; i++) {
-            teams[i] = new Team(teamStrings[i]);
+        for (String teamString : teamStrings) {
+            teams.add(new Team(teamString));
         }
     }
 }
