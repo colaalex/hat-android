@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,8 +20,8 @@ public class TeamsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private static final int TYPE_FOOTER = 1;
 
-    ArrayList<Team> teams;
-    Context context;
+    private ArrayList<Team> teams;
+    private Context context;
 
     public TeamsAdapter(ArrayList<Team> teams, Context context) {
         this.teams = teams;
@@ -131,9 +132,13 @@ public class TeamsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             goButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, MainActivity.class);
-                    intent.putExtra("teams", teams);
-                    context.startActivity(intent);
+                    if (teams.size() >= 2) {
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.putExtra("teams", teams);
+                        context.startActivity(intent);
+                    }
+                    else
+                        Toast.makeText(context, "Нужно минимум две команды", Toast.LENGTH_SHORT).show();
                 }
             });
         }

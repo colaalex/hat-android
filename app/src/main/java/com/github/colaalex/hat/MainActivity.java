@@ -18,7 +18,6 @@ import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
-    //TODO зациклить игру, если после хода всех команд остались слова
 
     private int turn;
     private ArrayList<Team> teams;
@@ -134,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         currentScore = 0;
         layoutQuiz.setVisibility(View.INVISIBLE);
         turn++;
+        if (turn == teams.size()) turn = 0;
         textTurn.setText(String.format(res.getString(R.string.team_turn), teams.get(turn).getName()));
         layoutSplash.setVisibility(View.VISIBLE);
     }

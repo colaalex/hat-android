@@ -11,7 +11,6 @@ import android.widget.Button;
 import java.util.ArrayList;
 
 public class TeamsActivity extends AppCompatActivity {
-    //TODO footer in recycler
 
     ArrayList<Team> teams;
 
