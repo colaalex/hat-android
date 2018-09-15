@@ -26,9 +26,14 @@ public class Team implements Serializable, Comparable<Team> {
         this.score = score;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public int compareTo(@NonNull Team team) {
         int compareScore = team.getScore();
         return compareScore - score;
+
     }
 }

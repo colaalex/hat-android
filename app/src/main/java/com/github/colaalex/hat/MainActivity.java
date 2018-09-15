@@ -18,9 +18,10 @@ import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
+    //TODO зациклить игру, если после хода всех команд остались слова
 
     private int turn;
-    private ArrayList<Team> teams = new ArrayList<>();
+    private ArrayList<Team> teams;
     private List<String> words = new ArrayList<>(); //пока что захардкодил
     private int currentScore;
     private Resources res;
@@ -47,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     void init() {
         res = getResources();
         fillList(); //тупой костыль и хардкод
+
+        Intent intentIncome = getIntent();
+        teams = (ArrayList<Team>) intentIncome.getSerializableExtra("teams");
 
         Button goButton = findViewById(R.id.btn_go);
         guessButton = findViewById(R.id.btn_guess);
@@ -148,10 +152,5 @@ public class MainActivity extends AppCompatActivity {
         words.add("w2");
         words.add("w3");
         words.add("w4");
-
-        String[] teamStrings = res.getStringArray(R.array.teams);
-        for (String teamString : teamStrings) {
-            teams.add(new Team(teamString));
-        }
     }
 }

@@ -11,4 +11,6 @@
     <string name="go">GO</string>
     <string name="result">Итог игры</string>
     <string name="new_game">Новая игра</string>
+    <string name="add_team">Добавить команду</string>
+    <string name="team_name">Название команды</string>
 </resources>

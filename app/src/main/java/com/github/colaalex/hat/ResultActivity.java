@@ -37,7 +37,7 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     void restartGame() {
-        Intent restartIntent = new Intent(this, MainActivity.class);
+        Intent restartIntent = new Intent(this, TeamsActivity.class);
         startActivity(restartIntent);
         finish();
     }
