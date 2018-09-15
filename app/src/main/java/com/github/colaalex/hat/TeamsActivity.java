@@ -24,24 +24,24 @@ public class TeamsActivity extends AppCompatActivity {
 
         final RecyclerView recyclerView = findViewById(R.id.rv_teams);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new TeamsAdapter(teams));
+        recyclerView.setAdapter(new TeamsAdapter(teams, this));
 
-        Button addButton = findViewById(R.id.btn_add);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                teams.add(new Team(null));
-                recyclerView.getAdapter().notifyDataSetChanged();
-            }
-        });
+//        Button addButton = findViewById(R.id.btn_add);
+//        addButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                teams.add(new Team(null));
+//                recyclerView.getAdapter().notifyDataSetChanged();
+//            }
+//        });
 
-        Button goButton = findViewById(R.id.btn_start);
-        goButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToGame();
-            }
-        });
+//        Button goButton = findViewById(R.id.btn_start);
+//        goButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                goToGame();
+//            }
+//        });
     }
 
     private void goToGame() {

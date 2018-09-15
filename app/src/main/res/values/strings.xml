@@ -8,7 +8,7 @@
     </string-array>
     <string name="team_turn">Ход команды %s</string>
     <string name="words_guessed">Слов угадано %d</string>
-    <string name="go">GO</string>
+    <string name="go">Начать игру</string>
     <string name="result">Итог игры</string>
     <string name="new_game">Новая игра</string>
     <string name="add_team">Добавить команду</string>
