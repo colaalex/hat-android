@@ -26,6 +26,10 @@ public class Team implements Serializable, Comparable<Team> {
         this.score = score;
     }
 
+    public void addScore(int toAdd) {
+        this.score += toAdd;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int turn;
     private ArrayList<Team> teams;
-    private List<String> words = new ArrayList<>(); //пока что захардкодил
+    private List<String> words; //пока что захардкодил
     private int currentScore;
     private Resources res;
     private Random random; //нужен будет для случайного выбора элемента из массива
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     void endTurn() {
         chronometer.stop();
-        teams.get(turn).setScore(currentScore);
+        teams.get(turn).addScore(currentScore);
         currentScore = 0;
         layoutQuiz.setVisibility(View.INVISIBLE);
         turn++;
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
     void endGame() {
         chronometer.stop();
-        teams.get(turn).setScore(currentScore);
+        teams.get(turn).addScore(currentScore);
         Intent intent = new Intent(this, ResultActivity.class);
         intent.putExtra("teams", teams);
         startActivity(intent);
@@ -148,9 +149,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void fillList() {
-        words.add("w1");
-        words.add("w2");
-        words.add("w3");
-        words.add("w4");
+        words = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.words)));
     }
 }

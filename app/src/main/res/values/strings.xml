@@ -1,10 +1,33 @@
 <resources>
     <string name="app_name">Hat</string>
-    <string-array name="teams">
-        <item>Shokoladka</item>
-        <item>Kekus</item>
-        <item>Pokus</item>
-        <item>Raks</item>
+    <string-array name="words">
+        <item>Шоколадка</item>
+        <item>Ларек</item>
+        <item>Трамвай</item>
+        <item>Опоздание</item>
+        <item>Интеграл</item>
+        <item>Завод</item>
+        <item>Часы</item>
+        <item>Парта</item>
+        <item>Препод</item>
+        <item>Окно</item>
+        <item>Суицид</item>
+        <item>Кекс</item>
+        <item>Торт</item>
+        <item>Кокос</item>
+        <item>Забор</item>
+        <item>Робот</item>
+        <item>Бар</item>
+        <item>Кафе</item>
+        <item>Рельса</item>
+        <item>Шляпа</item>
+        <item>Эльф</item>
+        <item>Гном</item>
+        <item>Лук</item>
+        <item>Перец</item>
+        <item>Парк</item>
+        <item>Лицей</item>
+        <item>Хоровод</item>
     </string-array>
     <string name="team_turn">Ход команды %s</string>
     <string name="words_guessed">Слов угадано %d</string>
