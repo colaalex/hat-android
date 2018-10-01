@@ -94,10 +94,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
 
-        currentTeamScore = 0;
-        words.addAll(skippedWords);
-        skippedWords.clear();
-
         textWord.setText(words.get(random.nextInt(words.size())));
 
         layoutSplash.setVisibility(View.GONE);
@@ -125,22 +121,25 @@ public class MainActivity extends AppCompatActivity {
         countDownTimer.cancel();
         teams[teamNumber].addPoints(currentTeamScore);
         teamNumber++;
+        currentTeamScore = 0;
         if (teamNumber < teams.length && !(words.isEmpty() && skippedWords.isEmpty())) {
             showSplash();
+            words.addAll(skippedWords);
+            skippedWords.clear();
         } else {
-            circle++;
-            if (circle < CIRCLES_COUNT) {
-                endCircle();
-            } else {
-                endGame();
-            }
+            endCircle();
         }
     }
 
     void endCircle() {
-        teamNumber = 0;
-        resetWords();
-        showSplash();
+        circle++;
+        if (circle < CIRCLES_COUNT) {
+            showSplash();
+            teamNumber = 0;
+            resetWords();
+        } else {
+            endGame();
+        }
     }
 
     void showSplash() {
