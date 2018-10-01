@@ -1,6 +1,5 @@
 package com.github.colaalex.hat;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.constraint.ConstraintLayout;
@@ -151,9 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
     void endGame() {
         String resultText = getResultText();
-        Intent intent = new Intent(this, ResultActivity.class);
-        intent.putExtra(RESULT_KEY, resultText);
-        startActivity(intent);
+        // pass data to the next ResultActivity here
         finish();
     }
 

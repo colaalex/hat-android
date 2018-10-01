@@ -15,9 +15,6 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        Intent intent = getIntent();
-        String result = intent.getStringExtra(MainActivity.RESULT_KEY);
-
         Button newGameButton = findViewById(R.id.btn_new);
         newGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -27,7 +24,8 @@ public class ResultActivity extends AppCompatActivity {
         });
 
         TextView textResult = findViewById(R.id.txt_result);
-        textResult.setText(String.format(getString(R.string.result), result));
+
+        // get text from intent here and paste it to textResult
     }
 
     void restartGame() {
@@ -35,6 +33,4 @@ public class ResultActivity extends AppCompatActivity {
         startActivity(restartIntent);
         finish();
     }
-
-
 }
