@@ -1,7 +1,6 @@
 package com.github.colaalex.hat;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,10 +14,9 @@ public class ResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
-        Resources res = getResources();
 
         Intent intent = getIntent();
-        String result = intent.getStringExtra("result");
+        String result = intent.getStringExtra(MainActivity.RESULT_KEY);
 
         Button newGameButton = findViewById(R.id.btn_new);
         newGameButton.setOnClickListener(new View.OnClickListener() {
@@ -29,7 +27,7 @@ public class ResultActivity extends AppCompatActivity {
         });
 
         TextView textResult = findViewById(R.id.txt_result);
-        textResult.setText(String.format(res.getString(R.string.result), result));
+        textResult.setText(String.format(getString(R.string.result), result));
     }
 
     void restartGame() {

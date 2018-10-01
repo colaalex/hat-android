@@ -1,42 +1,41 @@
 package com.github.colaalex.hat;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.os.SystemClock;
+import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Chronometer;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private int turn;
-    private Team[] teams = new Team[4];
-    private List<String> words = new ArrayList<>(); //пока что захардкодил
-    private int currentScore;
-    private Resources res;
-    private Random random; //нужен будет для случайного выбора элемента из массива
+    private static final long TURN_DURATION = 30000;
+    private static final int CIRCLES_COUNT = 3;
+    public static final String RESULT_KEY = "result_key";
 
-    private Chronometer chronometer;
+    private int circle = 0;
+    private int teamNumber = 0;
+    private int currentTeamScore;
+    private Team[] teams;
+    private List<String> words = new ArrayList<>();
+    private List<String> skippedWords = new ArrayList<>();
+    private Random random = new Random();
+    private CountDownTimer countDownTimer;
+
     private TextView textTurn;
-    private TextView textCounter;
     private TextView textWord;
-
-    private Button guessButton;
-    private Button skipButton;
+    private TextView timer;
 
     private ConstraintLayout layoutSplash;
-    private LinearLayout layoutQuiz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,23 +45,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void init() {
-        res = getResources();
-        fillList(); //тупой костыль и хардкод
+        fillTeams();
+        resetWords();
 
         Button goButton = findViewById(R.id.btn_go);
-        guessButton = findViewById(R.id.btn_guess);
-        skipButton = findViewById(R.id.btn_skip);
-        chronometer = findViewById(R.id.chronometer);
+        Button guessedButton = findViewById(R.id.btn_guess);
+        Button skipButton = findViewById(R.id.btn_skip);
         textTurn = findViewById(R.id.txt_turn);
-        random = new Random();
         layoutSplash = findViewById(R.id.layout_splash);
-        layoutQuiz = findViewById(R.id.layout_quiz);
-        textCounter = findViewById(R.id.txt_count);
         textWord = findViewById(R.id.txt_word);
-
-        turn = 0;
-
-        textTurn.setText(String.format(res.getString(R.string.team_turn), teams[0].getName()));
+        timer = findViewById(R.id.timer);
 
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,31 +62,8 @@ public class MainActivity extends AppCompatActivity {
                 startTurn();
             }
         });
-    }
 
-    void startTurn() {
-        layoutSplash.setVisibility(View.INVISIBLE);
-        layoutQuiz.setVisibility(View.VISIBLE);
-
-        chronometer.setCountDown(true);
-        chronometer.setBase(SystemClock.elapsedRealtime() + 1000 * 15);
-        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-            @Override
-            public void onChronometerTick(Chronometer chronometer) {
-                long elapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
-
-                if (elapsedMillis >= 0) {
-                    endTurn();
-                }
-            }
-        });
-
-        currentScore = 0;
-        textCounter.setText(String.format(res.getString(R.string.words_guessed), currentScore));
-
-        textWord.setText(words.get(random.nextInt(words.size())));
-
-        guessButton.setOnClickListener(new View.OnClickListener() {
+        guessedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 guessed(textWord.getText().toString());
@@ -104,63 +73,109 @@ public class MainActivity extends AppCompatActivity {
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                skipped();
+                skipped(textWord.getText().toString());
             }
         });
 
-        chronometer.start();
+        showSplash();
+    }
+
+    void startTurn() {
+        countDownTimer = new CountDownTimer(TURN_DURATION, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
+                long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
+                timer.setText(getString(R.string.time_format, minutes, seconds));
+            }
+
+            @Override
+            public void onFinish() {
+                endTurn();
+            }
+        }.start();
+
+        currentTeamScore = 0;
+        words.addAll(skippedWords);
+        skippedWords.clear();
+
+        textWord.setText(words.get(random.nextInt(words.size())));
+
+        layoutSplash.setVisibility(View.GONE);
     }
 
     void guessed(String word) {
         words.remove(word);
-        currentScore++;
-        textCounter.setText(String.format(res.getString(R.string.words_guessed), currentScore));
+        currentTeamScore++;
         if (words.size() > 0)
             textWord.setText(words.get(random.nextInt(words.size())));
         else
-            endGame();
+            endTurn();
     }
 
-    void skipped() {
-        textWord.setText(words.get(random.nextInt(words.size())));
+    void skipped(String word) {
+        words.remove(word);
+        skippedWords.add(word);
+        if (words.size() > 0)
+            textWord.setText(words.get(random.nextInt(words.size())));
+        else
+            endTurn();
     }
 
     void endTurn() {
-        chronometer.stop();
-        teams[turn].setScore(currentScore);
-        currentScore = 0;
-        layoutQuiz.setVisibility(View.INVISIBLE);
-        turn++;
-        textTurn.setText(String.format(res.getString(R.string.team_turn), teams[turn].getName()));
+        countDownTimer.cancel();
+        teams[teamNumber].addPoints(currentTeamScore);
+        teamNumber++;
+        if (teamNumber < teams.length && !(words.isEmpty() && skippedWords.isEmpty())) {
+            showSplash();
+        } else {
+            circle++;
+            if (circle < CIRCLES_COUNT) {
+                endCircle();
+            } else {
+                endGame();
+            }
+        }
+    }
+
+    void endCircle() {
+        teamNumber = 0;
+        resetWords();
+        showSplash();
+    }
+
+    void showSplash() {
+        textTurn.setText(getString(R.string.team_turn, teams[teamNumber].getName()));
         layoutSplash.setVisibility(View.VISIBLE);
     }
 
     void endGame() {
-        chronometer.stop();
-        teams[turn].setScore(currentScore);
-        String resultText = setResultText();
+        String resultText = getResultText();
         Intent intent = new Intent(this, ResultActivity.class);
-        intent.putExtra("result", resultText);
+        intent.putExtra(RESULT_KEY, resultText);
         startActivity(intent);
         finish();
     }
 
-    String setResultText() {
+    String getResultText() {
         Arrays.sort(teams);
         StringBuilder builder = new StringBuilder();
         for (Team team : teams) {
-            builder.append(String.format("%s %d\n", team.getName(), team.getScore()));
+            builder.append(getString(R.string.result_format, team.getName(), team.getScore()));
         }
         return builder.toString();
     }
 
-    void fillList() {
-        words.add("w1");
-        words.add("w2");
-        words.add("w3");
-        words.add("w4");
+    void resetWords() {
+        String[] words = getResources().getStringArray(R.array.words);
+        skippedWords.clear();
+        this.words.clear();
+        this.words.addAll(Arrays.asList(words));
+    }
 
-        String[] teamStrings = res.getStringArray(R.array.teams);
+    void fillTeams() {
+        String[] teamStrings = getResources().getStringArray(R.array.teams);
+        teams = new Team[teamStrings.length];
         for (int i = 0; i < teamStrings.length; i++) {
             teams[i] = new Team(teamStrings[i]);
         }

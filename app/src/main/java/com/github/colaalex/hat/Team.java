@@ -26,6 +26,10 @@ public class Team implements Serializable, Comparable<Team> {
         this.score = score;
     }
 
+    public void addPoints(int count) {
+        score += count;
+    }
+
     @Override
     public int compareTo(@NonNull Team team) {
         int compareScore = team.getScore();

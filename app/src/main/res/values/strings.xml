@@ -6,9 +6,18 @@
         <item>Pokus</item>
         <item>Raks</item>
     </string-array>
+    <string-array name="words">
+        <item>Word1</item>
+        <item>Word2</item>
+        <item>Word3</item>
+        <item>Word4</item>
+    </string-array>
     <string name="team_turn">Ход команды %s</string>
-    <string name="words_guessed">Слов угадано %d</string>
     <string name="go">GO</string>
     <string name="result">Результат\n%s</string>
     <string name="new_game">Новая игра</string>
+    <string name="guessed">Угадано</string>
+    <string name="skip">Пропустить</string>
+    <string name="time_format">%1$d:%2$d</string>
+    <string name="result_format">%1$s: %2$d\n</string>
 </resources>
